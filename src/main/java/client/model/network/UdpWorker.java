@@ -1,9 +1,9 @@
 package client.model.network;
 
 import client.controller.Controller;
-import client.model.Bullet;
-import client.model.GameLayout;
-import client.model.Gamer;
+import client.model.gameLayout.Bullet;
+import client.model.gameLayout.GameLayout;
+import client.model.gameLayout.Gamer;
 import client.model.exceptions.ParseGameLayoutException;
 
 import javax.swing.*;

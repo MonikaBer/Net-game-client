@@ -1,8 +1,7 @@
 package client.view;
 
 import client.interfaces.ConfigurationWindowListener;
-import client.interfaces.GameWindowListener;
-import client.model.GameConfiguration;
+import client.model.network.GameConfiguration;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

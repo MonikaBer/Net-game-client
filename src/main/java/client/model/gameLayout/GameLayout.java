@@ -1,4 +1,4 @@
-package client.model;
+package client.model.gameLayout;
 
 import java.util.List;
 

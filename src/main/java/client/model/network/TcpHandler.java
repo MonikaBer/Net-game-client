@@ -1,7 +1,6 @@
 package client.model.network;
 
 import client.controller.Controller;
-import client.model.GameConfiguration;
 
 import java.io.IOException;
 import java.net.*;

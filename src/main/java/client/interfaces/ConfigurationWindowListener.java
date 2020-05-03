@@ -1,7 +1,6 @@
 package client.interfaces;
 
-import client.model.GameConfiguration;
-import client.view.ConfigurationWindow;
+import client.model.network.GameConfiguration;
 
 public interface ConfigurationWindowListener {
 
