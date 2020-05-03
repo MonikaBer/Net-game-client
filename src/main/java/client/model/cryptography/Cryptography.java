@@ -1,36 +1,61 @@
 package client.model.cryptography;
 
+import javax.annotation.processing.AbstractProcessor;
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
+
 public class Cryptography {
 
-    private String publicKey;
-    private String privateKey;
-    private String sessionKey;
+    private PublicKey publicKey;
+    private PrivateKey privateKey;
+    private SecretKey sessionKey;
 
-    public Cryptography() {
-        this.publicKey = new String("aaaaaaaaaa");
-        this.privateKey = new String("bbbbbbbbbb");
+    public Cryptography() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(256);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+        this.publicKey = keyPair.getPublic();
+        this.privateKey = keyPair.getPrivate();
     }
 
-    public String getPublicKey() {
-       return this.publicKey;
+    public byte[] getPublicKey() {
+       return this.publicKey.getEncoded();
     }
 
-    public String getPrivateKey() {
-        return this.privateKey;
+    public void generateSessionKey() throws NoSuchAlgorithmException {
+        SecureRandom secureRandom = new SecureRandom();
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("RSA");
+        keyGenerator.init(256, secureRandom);
+        this.sessionKey = keyGenerator.generateKey();
     }
 
-    public String getSessionKey() {
-        return this.sessionKey;
+    //zwraca klucz sesji zakodowany kluczem prywatnym klienta
+    public byte[] encryptSessionKey() throws NoSuchPaddingException, NoSuchAlgorithmException,
+            BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
+
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, this.privateKey);
+        byte[] cipherSessionKey = cipher.doFinal(this.sessionKey.getEncoded());
+        return cipherSessionKey;
     }
 
-    public String generateSessionKey() {
-        this.sessionKey = new String("eeeeeeeeee");
-        return this.sessionKey;
+    public byte[] encrypt(byte[] plainText) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, this.sessionKey);
+        byte[] cipherText = cipher.doFinal(plainText);
+        return cipherText;
     }
 
-    public String encodeSessionKey() {    //zwraca klucz sesji zakodowany kluczem prywatnym
-        String encodedSessionKey = new String();
+    public byte[] decrypt(byte[] cipherText) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
-        return encodedSessionKey;
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, this.sessionKey);
+        byte[] plainText = cipher.doFinal(cipherText);
+        return plainText;
     }
 }

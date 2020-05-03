@@ -56,7 +56,7 @@ public class TcpHandler {
                 healthCheck = new Thread(runnable1);
                 healthCheck.start();
 
-                //TODO: szyfrowanie
+                //TODO: negocjacja kluczy
 
                 try {
                     udpClientSocket = new DatagramSocket();
