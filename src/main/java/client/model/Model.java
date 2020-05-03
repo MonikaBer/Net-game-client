@@ -23,6 +23,8 @@ public class Model {
     //private PrintWriter out;
     private DatagramPacket packet;
 
+    public Model() {}
+
 
     public Model(String serverAddress, int tcpServerPort, int udpServerPort) throws Error {
 
@@ -71,7 +73,7 @@ public class Model {
 
             //utworzenie gniazda udp i wątku go obsługującego
             this.clientAddress = new String("127.0.0.1");
-            this.udpClientPort = 1111;
+            this.udpClientPort = 11111;
             InetSocketAddress udpClientAddress = new InetSocketAddress(clientAddress, udpClientPort);
             udpClientSocket = new DatagramSocket(udpClientAddress);
 

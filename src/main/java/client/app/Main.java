@@ -1,6 +1,12 @@
 package client.app;
 
+import client.controller.Controller;
+import client.interfaces.ConfigurationWindowListener;
 import client.model.Model;
+import client.network.TcpHandler;
+import client.network.UdpWorker;
+import client.view.ConfigurationWindow;
+import client.view.GameWindow;
 
 import javax.swing.*;
 import java.net.InetSocketAddress;
@@ -13,13 +19,12 @@ public class Main {
         Runnable program = new Runnable() {
             @Override
             public void run() {
-
-                Model model = new Model("localhost", 8000, 7000);
-
-//                View view = new View();
-//                Controller controller = new Controller(view, model);
-//
-//                view.addListener(controller);
+                ConfigurationWindow configurationWindow = new ConfigurationWindow();
+                GameWindow gameWindow = new GameWindow();
+                TcpHandler tcpHandler = new TcpHandler();
+                Controller controller = new Controller(gameWindow, configurationWindow, tcpHandler);
+                configurationWindow.addListener(controller);
+                gameWindow.addListener(controller);
             }
         };
         SwingUtilities.invokeLater(program);
