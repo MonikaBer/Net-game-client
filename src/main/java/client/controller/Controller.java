@@ -4,8 +4,7 @@ import client.interfaces.ConfigurationWindowListener;
 import client.interfaces.GameWindowListener;
 import client.model.GameConfiguration;
 import client.model.GameLayout;
-import client.model.Model;
-import client.network.TcpHandler;
+import client.model.network.TcpHandler;
 import client.view.ConfigurationWindow;
 import client.view.GameWindow;
 

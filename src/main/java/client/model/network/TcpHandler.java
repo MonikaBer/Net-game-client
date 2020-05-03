@@ -1,11 +1,9 @@
-package client.network;
+package client.model.network;
 
 import client.controller.Controller;
 import client.model.GameConfiguration;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
 

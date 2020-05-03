@@ -1,4 +1,4 @@
-package client.network;
+package client.model.network;
 
 import client.controller.Controller;
 import client.model.Bullet;

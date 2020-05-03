@@ -1,16 +1,11 @@
 package client.app;
 
 import client.controller.Controller;
-import client.interfaces.ConfigurationWindowListener;
-import client.model.Model;
-import client.network.TcpHandler;
-import client.network.UdpWorker;
+import client.model.network.TcpHandler;
 import client.view.ConfigurationWindow;
 import client.view.GameWindow;
 
 import javax.swing.*;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 
 public class Main {
 
