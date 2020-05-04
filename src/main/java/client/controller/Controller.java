@@ -8,6 +8,8 @@ import client.model.network.TcpHandler;
 import client.view.ConfigurationWindow;
 import client.view.GameWindow;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 
@@ -24,12 +26,12 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
         this.tcpHandler = tcpHandler;
     }
 
-    public void setUdpSocket(DatagramSocket udpSocket) {
-        this.udpSocket = udpSocket;
-    }
-
     public DatagramSocket getUdpSocket() {
         return this.udpSocket;
+    }
+
+    public void setUdpSocket(DatagramSocket udpSocket) {
+        this.udpSocket = udpSocket;
     }
 
     public void updateGameLayout(GameLayout gameLayout) {
@@ -38,7 +40,6 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
 
     @Override
     public void configurationWindowChanged(GameConfiguration gameConfiguration, Object source) {
-
         this.configurationWindow.dispose();
         this.gameWindow.setVisible(true);
         this.tcpHandler.start(gameConfiguration, this);
@@ -46,6 +47,17 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
 
     @Override
     public void gameWindowChanged(Object source) {
+        //przechwycenie klawiszy i odczytanie kierunku ruchu i kątu strzału gracza
+        //zbudowanie obiektu GamerMoving i wywołanie toBytes() na nim
 
+        //wysłanie pakietu po udp do serwera
+        String str = new String("kierunek ruchu i strzału gracza");
+        byte[] bytes = str.getBytes();
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+        try {
+            this.udpSocket.send(datagramPacket);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
