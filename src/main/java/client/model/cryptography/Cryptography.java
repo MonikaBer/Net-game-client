@@ -31,12 +31,13 @@ public class Cryptography {
         this.sessionKey = keyGenerator.generateKey();
     }
 
-    //zwraca klucz sesji zakodowany kluczem prywatnym klienta
-    public byte[] encryptSessionKey() throws NoSuchPaddingException, NoSuchAlgorithmException,
+    //zwraca klucz sesji zakodowany kluczem publicznym serwera
+    public byte[] encryptSessionKey(byte[] servPubKey) throws NoSuchPaddingException, NoSuchAlgorithmException,
             BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
 
+        SecretKey serverPublicKey = new SecretKeySpec(servPubKey, 0, servPubKey.length, "RSA");
         Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, this.privateKey);
+        cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey);
         byte[] cipherSessionKey = cipher.doFinal(this.sessionKey.getEncoded());
         return cipherSessionKey;
     }

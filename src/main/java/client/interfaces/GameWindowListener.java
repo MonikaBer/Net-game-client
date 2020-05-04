@@ -4,5 +4,5 @@ import client.view.GameWindow;
 
 public interface GameWindowListener {
 
-    void gameWindowChanged(GameWindow gameWindow, Object source);
+    void gameWindowChanged(Object source);
 }

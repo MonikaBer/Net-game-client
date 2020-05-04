@@ -45,7 +45,7 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
     }
 
     @Override
-    public void gameWindowChanged(GameWindow gameWindow, Object source) {
+    public void gameWindowChanged(Object source) {
 
     }
 }
