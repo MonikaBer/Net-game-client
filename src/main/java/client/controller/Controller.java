@@ -3,7 +3,7 @@ package client.controller;
 import client.interfaces.ConfigurationWindowListener;
 import client.interfaces.GameWindowListener;
 import client.model.network.GameConfiguration;
-import client.model.gameLayout.GameLayout;
+import client.model.network.packets.gameLayout.GameLayout;
 import client.model.network.TcpHandler;
 import client.view.ConfigurationWindow;
 import client.view.GameWindow;

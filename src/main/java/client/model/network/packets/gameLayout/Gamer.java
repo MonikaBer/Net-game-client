@@ -1,4 +1,4 @@
-package client.model.gameLayout;
+package client.model.network.packets.gameLayout;
 
 public class Gamer {
 
