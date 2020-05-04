@@ -1,6 +1,5 @@
 package client.model.cryptography;
 
-import javax.annotation.processing.AbstractProcessor;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;

@@ -11,7 +11,6 @@ public class TcpHandler {
     private Thread tcpHandler;
     private Thread healthCheck;
 
-
     public TcpHandler() {}
 
     public void start(GameConfiguration gameConfiguration, Controller controller) {
@@ -52,11 +51,10 @@ public class TcpHandler {
                         }
                     }
                 };
-
                 healthCheck = new Thread(runnable1);
                 healthCheck.start();
 
-                //TODO: negocjacja kluczy
+                //TODO: negocjacja kluczy -> na razie komunikacja bez szyfrowania
 
                 try {
                     udpClientSocket = new DatagramSocket();
@@ -66,6 +64,7 @@ public class TcpHandler {
                 }
 
                 controller.setUdpSocket(udpClientSocket);
+                controller.setUdpHost(gameConfiguration.getUdpHost());
 
                 byte[] startUdpMsg = "UDP start".getBytes();
                 DatagramPacket startUdpPacket = new DatagramPacket(startUdpMsg, startUdpMsg.length, gameConfiguration.getUdpHost());

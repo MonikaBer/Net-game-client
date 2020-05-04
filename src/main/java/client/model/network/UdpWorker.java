@@ -1,19 +1,16 @@
 package client.model.network;
 
 import client.controller.Controller;
-import client.model.network.packets.gameLayout.Bullet;
 import client.model.network.packets.gameLayout.GameLayout;
-import client.model.network.packets.gameLayout.Gamer;
 import client.model.exceptions.ParseGameLayoutException;
 
 import javax.swing.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.List;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 import static client.model.network.packets.gameLayout.GameLayout.parseToGameLayout;
+
 
 public class UdpWorker extends SwingWorker<Object, GameLayout> implements AutoCloseable {
 
@@ -34,11 +31,12 @@ public class UdpWorker extends SwingWorker<Object, GameLayout> implements AutoCl
         while (true) {
             this.udpSocket.receive(udpPacket);
 
-            try {
-                publish(parseToGameLayout(buffer));
-            } catch (ParseGameLayoutException ex) {
-                ex.printStackTrace();
-            }
+            //try {
+                //publish(parseToGameLayout(buffer));
+                System.out.println(buffer);
+            //} catch (ParseGameLayoutException ex) {
+            //    ex.printStackTrace();
+            //}
         }
     }
 

@@ -11,6 +11,7 @@ import client.view.GameWindow;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 
 
 public class Controller implements ConfigurationWindowListener, GameWindowListener {
@@ -19,6 +20,7 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
     private ConfigurationWindow configurationWindow;
     private TcpHandler tcpHandler;
     private DatagramSocket udpSocket;
+    private InetSocketAddress udpHost;
 
     public Controller(GameWindow gameWindow, ConfigurationWindow configurationWindow, TcpHandler tcpHandler) {
         this.gameWindow = gameWindow;
@@ -33,6 +35,8 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
     public void setUdpSocket(DatagramSocket udpSocket) {
         this.udpSocket = udpSocket;
     }
+
+    public void setUdpHost(InetSocketAddress udpHost) { this.udpHost = udpHost; }
 
     public void updateGameLayout(GameLayout gameLayout) {
         //update game layout in game window
@@ -53,7 +57,7 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
         //wysłanie pakietu po udp do serwera
         String str = new String("kierunek ruchu i strzału gracza");
         byte[] bytes = str.getBytes();
-        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, this.udpHost);
         try {
             this.udpSocket.send(datagramPacket);
         } catch (IOException ex) {
