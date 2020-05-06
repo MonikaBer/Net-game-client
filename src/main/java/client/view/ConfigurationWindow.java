@@ -23,7 +23,7 @@ public class ConfigurationWindow extends JFrame implements ActionListener {
 
         this.setSize(500, 250);
         this.setResizable(false);
-        this.setTitle("Konfiguracja");
+        this.setTitle("Konfiguracja serwera");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setVisible(true);
