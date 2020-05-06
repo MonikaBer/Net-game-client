@@ -2,17 +2,14 @@ package client.model.network;
 
 import client.controller.Controller;
 import client.model.network.packets.gameLayout.GameLayout;
-import client.model.exceptions.ParseGameLayoutException;
 
 import javax.swing.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.List;
 
-import static client.model.network.packets.gameLayout.GameLayout.parseToGameLayout;
 
-
-public class UdpWorker extends SwingWorker<Object, GameLayout> implements AutoCloseable {
+public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoCloseable {
 
     private Controller controller;
     private DatagramSocket udpSocket;
@@ -24,16 +21,25 @@ public class UdpWorker extends SwingWorker<Object, GameLayout> implements AutoCl
     }
 
     @Override
-    protected Object doInBackground() throws Exception {
+    protected Boolean doInBackground() throws Exception {
+
         byte[] buffer = new byte[1024];
         DatagramPacket udpPacket = new DatagramPacket(buffer, buffer.length);
 
         while (true) {
+            if (this.isCancelled()) {
+                return false;
+            }
             this.udpSocket.receive(udpPacket);
 
             //try {
                 //publish(parseToGameLayout(buffer));
-                System.out.println(buffer);
+                StringBuilder sBuilder = new StringBuilder();
+                for(int i = 0; i < buffer.length; i++) {
+                    sBuilder.append((char)buffer[i]);
+                }
+                String bufferInString = sBuilder.toString();
+                System.out.println(bufferInString);
             //} catch (ParseGameLayoutException ex) {
             //    ex.printStackTrace();
             //}

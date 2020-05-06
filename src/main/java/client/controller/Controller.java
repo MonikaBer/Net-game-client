@@ -55,7 +55,7 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
         //zbudowanie obiektu GamerMoving i wywołanie toBytes() na nim
 
         //wysłanie pakietu po udp do serwera
-        String str = new String("kierunek ruchu i strzału gracza");
+        String str = "5";
         byte[] bytes = str.getBytes();
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, this.udpHost);
         try {

@@ -40,15 +40,15 @@ public class ConfigurationWindow extends JFrame implements ActionListener {
         lUdpPort.setBounds(20, 90, 120, 20);
         add(lUdpPort);
 
-        tHost = new JTextField();
+        tHost = new JTextField("localhost");
         tHost.setBounds(190, 30, 200, 20);
         add(tHost);
 
-        tTcpPort = new JTextField();
+        tTcpPort = new JTextField("8888");
         tTcpPort.setBounds(190, 60, 200, 20);
         add(tTcpPort);
 
-        tUdpPort = new JTextField();
+        tUdpPort = new JTextField("8888");
         tUdpPort.setBounds(190, 90, 200, 20);
         add(tUdpPort);
 
