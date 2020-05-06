@@ -30,7 +30,7 @@ public class Cryptography {
         this.sessionKey = keyGenerator.generateKey();
     }
 
-    //zwraca klucz sesji zakodowany kluczem publicznym serwera
+    //return session key encrypted by server public key
     public byte[] encryptSessionKey(byte[] servPubKey) throws NoSuchPaddingException, NoSuchAlgorithmException,
             BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
 

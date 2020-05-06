@@ -39,7 +39,7 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
     public void setUdpHost(InetSocketAddress udpHost) { this.udpHost = udpHost; }
 
     public void updateGameLayout(GameLayout gameLayout) {
-        //update game layout in game window
+        //update game layout in the game window
     }
 
     @Override
@@ -51,17 +51,17 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
 
     @Override
     public void gameWindowChanged(Object source) {
-        //przechwycenie klawiszy i odczytanie kierunku ruchu i kątu strzału gracza
-        //zbudowanie obiektu GamerMoving i wywołanie toBytes() na nim
+        //catch keyboard pressing and detect direction of moving and angle of shoot
+        //build object of class GamerMoving and call toBytes() on it
 
-        //wysłanie pakietu po udp do serwera
-        String str = "5";
-        byte[] bytes = str.getBytes();
+        //send packet to server by UDP
+        byte[] bytes = "5".getBytes();
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, this.udpHost);
         try {
             this.udpSocket.send(datagramPacket);
         } catch (IOException ex) {
             ex.printStackTrace();
+            System.out.println("Nieudane wysłanie pakietu z ruchem i strzałem gracza po UDP");
         }
     }
 }

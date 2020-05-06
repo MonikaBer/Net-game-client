@@ -1,8 +1,6 @@
 package client.model.network;
 
 import client.controller.Controller;
-import client.model.exceptions.ParseGameLayoutException;
-import client.model.helpers.Helper;
 
 import java.io.IOException;
 import java.net.*;
@@ -44,19 +42,6 @@ public class TcpHandler {
                     System.out.println("Nieudana próba połączenia z serwerem po TCP");
                     continue;
                 }
-
-                //wait for start of game on TCP
-//                try {
-//                    byte[] bytes = new byte[50];
-//                    int len = tcpSocket.getInputStream().read(bytes);
-//                    if (len == 5) {
-//                        if (!bytes.toString().equals("start"))
-//                            continue;
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    continue;
-//                }
 
                 //wait for your gamer id on TCP
                 String gamerId;
@@ -137,7 +122,7 @@ public class TcpHandler {
                             }
                         } catch (SocketTimeoutException e) {
                             System.out.println("Problem z połączeniem TCP podczas inicjalizacji UDP -> jeszcze nieobsłużone");
-                            //TODO: handle this situation -> logger info czekanie przez sekundę
+                            //TODO: handle this situation -> logger info wait for a second
                         }
                     }
                 } catch (IOException e) {
@@ -154,9 +139,7 @@ public class TcpHandler {
                     continue;
                 }
 
-                UdpWorker udpWorker = new UdpWorker(controller);
-                try {
-                //try (UdpWorker udpWorker = new UdpWorker(controller)) {
+                try (UdpWorker udpWorker = new UdpWorker(controller)) {
                     byte[] stopPacket = new byte[4];
                     byte[] startPacket = new byte[5];
                     while (true) {
@@ -192,10 +175,7 @@ public class TcpHandler {
                 } catch (IOException ex) {
                     //ex.printStackTrace();
                     System.out.println("Problem z połączeniem TCP");
-                    if (!udpWorker.isCancelled()) {
-                        udpWorker.close();
-                        System.out.println("Kończę rozgrywkę");
-                    }
+                    System.out.println("Kończę rozgrywkę");
                     continue;
                 }
             }

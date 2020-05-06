@@ -8,6 +8,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.List;
 
+import static client.model.helpers.Helper.convertToString;
+
 
 public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoCloseable {
 
@@ -27,21 +29,14 @@ public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoC
         DatagramPacket udpPacket = new DatagramPacket(buffer, buffer.length);
 
         while (true) {
-            if (this.isCancelled()) {
-                return false;
-            }
+            if (this.isCancelled()) return false;
             this.udpSocket.receive(udpPacket);
-
             //try {
+                System.out.println("stan gry -> " + convertToString(buffer));
                 //publish(parseToGameLayout(buffer));
-                StringBuilder sBuilder = new StringBuilder();
-                for(int i = 0; i < buffer.length; i++) {
-                    sBuilder.append((char)buffer[i]);
-                }
-                String bufferInString = sBuilder.toString();
-                System.out.println(bufferInString);
             //} catch (ParseGameLayoutException ex) {
             //    ex.printStackTrace();
+            //System.out.println("Nieudane parsowanie pakietu ze stanem gry");
             //}
         }
     }
