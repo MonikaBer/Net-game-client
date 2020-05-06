@@ -30,7 +30,3 @@ Schemat działania TcpHandler'a:
 
 Do komunikacji po UDP zostały wykorzystane testowe pakiety. Klasy ze strukturą pakietów, które będą używane w docelowej wersji klienta znajdują się w "model/network/packets".
 Na razie komunikacja odbywa się bez szyfrowania. Do tego celu została już przygotowana klasa w "model/cryptography".
-<<<<<<< HEAD
-
-=======
->>>>>>> 7d082d462668c58a9a94ca7c1bcf71d4a5322daf
