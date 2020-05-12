@@ -5,7 +5,6 @@ import client.interfaces.GameWindowListener;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 public class GameWindow extends JFrame implements KeyListener {
 
@@ -20,10 +19,6 @@ public class GameWindow extends JFrame implements KeyListener {
     public void createGameWindow() {
         this.gamePanel = new GamePanel();
         this.setContentPane(this.gamePanel);
-
-        //this.gamePanel.changeGameGraphics();
-        //this.gamePanel.update(this.gamePanel.getGameGraphics());
-        //this.setContentPane(this.gamePanel);
 
         this.addKeyListener(this);
         this.pack();

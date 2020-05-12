@@ -9,11 +9,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.List;
 
-import static client.model.helpers.Helper.convertGamerId;
-import static client.model.helpers.Helper.convertToString;
 import static client.model.network.packets.gameLayout.GameLayout.checkIfGameLayout;
 import static client.model.network.packets.gameLayout.GameLayout.parseToGameLayout;
-import java.nio.ByteBuffer;
+
 
 public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoCloseable {
     private Controller controller;
@@ -61,12 +59,3 @@ public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoC
         cancel(true);
     }
 }
-
-//int moving = convertToInt(buffer, udpPacket.getLength());
-//int moving = (char)buffer[0] - '0';
-//                moving = moving << 8;
-//                moving += second - '0';
-//                moving = moving << 8;
-//                moving += third - '0';
-//                moving = moving << 8;
-//                moving += fourth - '0';

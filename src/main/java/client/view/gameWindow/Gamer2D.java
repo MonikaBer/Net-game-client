@@ -6,19 +6,15 @@ import java.awt.geom.Ellipse2D;
 public class Gamer2D {
 
     private int gamerId;
-//    private boolean active;
-//    private int points;
     private double x;
     private double y;
     private double diameter = 30;
     private Ellipse2D graphicRepresentation;
     private Color color;
 
-//    public void Gamer2D(int gamerId, int x, int y, Color color) {
     public Gamer2D(int gamerId) {
         this.gamerId = gamerId;
         this.generateGraphicRepresentation();
-        //this.color = color;
     }
 
     public void generateGraphicRepresentation() {
@@ -37,9 +33,5 @@ public class Gamer2D {
 
     public int getGamerId() {
         return gamerId;
-    }
-
-    public void setGamerId(int gamerId) {
-        this.gamerId = gamerId;
     }
 }
