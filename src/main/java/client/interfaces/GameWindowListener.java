@@ -1,10 +1,8 @@
 package client.interfaces;
 
-import client.view.GameWindow;
-
-import java.io.IOException;
+import java.awt.event.KeyEvent;
 
 public interface GameWindowListener {
 
-    void gameWindowChanged(Object source);
+    void gameWindowChanged(KeyEvent source);
 }

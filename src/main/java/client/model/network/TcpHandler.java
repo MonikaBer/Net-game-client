@@ -1,13 +1,13 @@
 package client.model.network;
 
 import client.controller.Controller;
+import client.model.helpers.Helper;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.TimeUnit;
 
-import static client.model.helpers.Helper.convertGamerId;
-import static client.model.helpers.Helper.convertToString;
+import static client.model.helpers.Helper.*;
 
 public class TcpHandler {
 
@@ -23,9 +23,9 @@ public class TcpHandler {
             int len;
             String receivedPacket;
             boolean isServerDisconnected = false;
-            boolean isSuccess = false;
 
             System.out.println("Próbuję połączyć się z serwerem po TCP... (jeśli trwa to długo, to znaczy, że serwer jest niedostępny)");
+            mainLoop:
             while (true) {
                 if (isServerDisconnected) {
                     System.out.println("Próbuję ponownie połączyć się z serwerem po TCP... (jeśli trwa to długo, to znaczy, że serwer ciągle jest niedostępny)");
@@ -49,19 +49,19 @@ public class TcpHandler {
                 }
 
                 //wait for your gamer id on TCP
-                String gamerId;
-                byte[] packetWithGamerId = new byte[6];
+                int gamerId;
+                byte[] packetWithGamerId = new byte[2];
                 try {
                     System.out.println("Czekam na pakiet od serwera z moim id gracza po TCP");
                     while (true) {
                         len = tcpSocket.getInputStream().read(packetWithGamerId);
-                        if (len != 6) {
-                            System.out.println("Serwer wysłał niespodziewany pakiet, miał być pakiet z 5-znakowym id gracza <XID>");
+                        if (len != 2) {
+                            System.out.println("Serwer wysłał niespodziewany pakiet, miał być pakiet z id gracza <XID>");
                         } else {
                             break;
                         }
                     }
-                    gamerId = convertGamerId(packetWithGamerId, 1, 5);
+                    gamerId = getFromBuffer(packetWithGamerId, 1, 1);
                     System.out.println("Odebrano id gracza równe: " + gamerId);
                 } catch (IOException e) {
                     //e.printStackTrace();
@@ -101,7 +101,7 @@ public class TcpHandler {
                 } catch (SocketException e) {
                     //e.printStackTrace();
                     System.out.println("Nieudana próba utworzenia gniazda UDP");
-                    continue;
+                    continue mainLoop;
                 }
 
                 controller.setUdpSocket(udpClientSocket);
@@ -115,35 +115,30 @@ public class TcpHandler {
                     tcpSocket.setSoTimeout(1000);
                     System.out.println("Przesyłam pakiet startowy po UDP do serwera");
                     byte[] startPacket = new byte[5];
+                    sendingstartedUdpPacketAndWaitingForStartLoop:
                     while (true) {
                         udpClientSocket.send(startUdpPacket);
                         try {
                             while (true) {
                                 len = tcpSocket.getInputStream().read(startPacket);
-                                receivedPacket = convertToString(startPacket);
-                                if (len != 5 || !receivedPacket.equals("start")) {
-                                    //System.out.println("Serwer wysłał niespodziewany pakiet, miał być 'start'");
+                                //receivedPacket = convertToString(startPacket);
+                                if (len != 5 || !ifStartPacket(startPacket)) {
+                                    System.out.println("Serwer wysłał niespodziewany pakiet, miał być <S...>");
                                 } else {
-                                    System.out.println("Udane zainicjowanie UDP, otrzymany pakiet 'start' po TCP od serwera");
-                                    isSuccess = true;
-                                    break;
+                                    System.out.println("Udane zainicjowanie UDP, otrzymany pakiet START po TCP od serwera");
+                                    break sendingstartedUdpPacketAndWaitingForStartLoop;
                                 }
-                            }
-                            if (isSuccess) {
-                                isSuccess = false;
-                                break;
                             }
                         } catch (SocketTimeoutException e) {
                             isServerDisconnected = true;
                             System.out.println("Problem z połączeniem TCP podczas inicjalizacji UDP -> jeszcze nieobsłużone");
-                            break;
+                            continue mainLoop;
                         }
                     }
-                    if (isServerDisconnected) continue;
                 } catch (IOException e) {
                     //e.printStackTrace();
                     System.out.println("Problem z wysłaniem pakietu startowego po UDP (lub ustawieniem timeout na TCP na 1 sek)");
-                    continue;
+                    continue mainLoop;
                 }
 
                 try {
@@ -151,11 +146,11 @@ public class TcpHandler {
                 } catch (SocketException e) {
                     //e.printStackTrace();
                     System.out.println("Problem z ustawieniem domyślnego timeout na TCP");
-                    continue;
+                    continue mainLoop;
                 }
 
                 try (UdpWorker udpWorker = new UdpWorker(controller)) {
-                    byte[] stopPacket = new byte[4];
+                    byte[] stopPacket = new byte[2];
                     byte[] startPacket = new byte[5];
                     while (true) {
                         udpWorker.execute();                //start of game
@@ -163,15 +158,15 @@ public class TcpHandler {
                             len = tcpSocket.getInputStream().read(stopPacket);               //wait for stop game
                             if (len == -1) {
                                 isServerDisconnected = true;
-                                System.out.println("Utracone połączenie z serwerem. Próba ponownego połączenia.");
+                                System.out.println("Utracone połączenie z serwerem. Próba ponownego połączenia. (waiting for stop)");
                                 break;
                             }
-                            receivedPacket = convertToString(stopPacket);
-                            if (len != 4 || !receivedPacket.equals("stop")) {
-                                //System.out.println("Niespodziewany pakiet po TCP zamiast pakietu 'stop'");
+                            //receivedPacket = convertToString(stopPacket);
+                            if (len != 2 || ifStopPacket(stopPacket)) {
+                                System.out.println("Niespodziewany pakiet po TCP zamiast pakietu STOP");
                                 continue;
                             }
-                            System.out.println("Otrzymałem pakiet 'stop', koniec rozgrywki");
+                            System.out.println("Otrzymałem pakiet STOP, koniec rozgrywki");
                             break;
                         }
 
@@ -180,31 +175,31 @@ public class TcpHandler {
                         //TODO: add event for GUI-> end of game
                         //java.awt.Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(null);
 
-                        if (isServerDisconnected)  break;
+                        if (isServerDisconnected)  continue mainLoop;
 
-                        System.out.println("Teraz zawieszam się w oczekiwaniu na start");
+                        System.out.println("Teraz zawieszam się w oczekiwaniu na START");
                         while (true) {
                             len = tcpSocket.getInputStream().read(startPacket);               //wait for start of game
                             if (len == -1) {
                                 isServerDisconnected = true;
-                                System.out.println("Utracone połączenie z serwerem. Próba ponownego połączenia.");
-                                break;
+                                System.out.println("Utracone połączenie z serwerem. Próba ponownego połączenia. (waiting for start)");
+                                continue mainLoop;
                             }
-                            receivedPacket = convertToString(startPacket);
-                            if (len != 5 || !receivedPacket.equals("start")) {
-                                //System.out.println("Niespodziewany pakiet zamiast pakietu 'start'");
+                            //receivedPacket = convertToString(startPacket);
+                            if (len != 5 || ifStartPacket(startPacket)) {
+                                System.out.println("Niespodziewany pakiet zamiast pakietu START");
                                 continue;
                             }
-                            System.out.println("Otrzymałem pakiet 'start' od serwera, wznawiam grę");
+                            System.out.println("Otrzymałem pakiet START od serwera, rozpoczynam nową rozgrywkę");
                             break;
                         }
-                        if (isServerDisconnected) break;
+                        if (isServerDisconnected) continue mainLoop;
                     }
                 } catch (IOException ex) {
                     //ex.printStackTrace();
                     System.out.println("Problem z połączeniem TCP");
                     System.out.println("Kończę rozgrywkę");
-                    continue;
+                    continue mainLoop;
                 }
             }
         };

@@ -3,7 +3,7 @@ package client.app;
 import client.controller.Controller;
 import client.model.network.TcpHandler;
 import client.view.ConfigurationWindow;
-import client.view.GameWindow;
+import client.view.gameWindow.GameWindow;
 
 import javax.swing.*;
 
