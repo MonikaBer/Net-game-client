@@ -1,6 +1,10 @@
 package client.model.network.packets.gameLayout;
 
 import client.model.exceptions.ParseGameLayoutException;
+import client.model.helpers.Helper;
+
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import java.util.ArrayList;
 
@@ -8,68 +12,102 @@ public class GameLayout {
 
     private int packetId;
     private ArrayList<Gamer> gamers;
+    private ArrayList<Bullet> bullets;
 
-    public GameLayout(int packetId, ArrayList<Gamer> gamers) {
+    public GameLayout(int packetId, ArrayList<Gamer> gamers, ArrayList<Bullet> bullets) {
         this.packetId = packetId;
         this.gamers = gamers;
+        this.bullets = bullets;
     }
 
-    public static boolean checkIfGameLayout(byte[] buffer) {
-
-        char tag = (char) buffer[0];
+    public static boolean ifGameLayout(byte[] buffer) {
+        char tag = (char)buffer[0];
         if (tag != 'Y')
             return false;
         return true;
     }
 
     public static GameLayout parseToGameLayout(byte[] buffer) throws ParseGameLayoutException {
+//        if (buffer.length < 7)
+//            throw new ParseGameLayoutException();
+
         if (buffer.length < 3)
             throw new ParseGameLayoutException();
+
+//        int crcSum = Helper.getNumberFromBuffer(buffer, buffer.length-4, buffer.length-1);
+//        Checksum checksum = new CRC32();
+//        checksum.update(buffer, 0, buffer.length);
+//        int checksumValue = (int)checksum.getValue();
+//        if (checksumValue != crcSum) {
+//            throw new ParseGameLayoutException();
+//        }
 
         int packetId = Byte.toUnsignedInt(buffer[1]);
         packetId = packetId * 256 + Byte.toUnsignedInt(buffer[2]);
 
-        ArrayList<Gamer> gamers = new ArrayList<Gamer>();
-        Gamer gamer;
+        ArrayList<Gamer> gamers = new ArrayList<>();
         int gamerId;
-        int xTemp, yTemp;
+        int gamerPoints;
         double x, y;
         int i = 3;
-        while (buffer[i] != 0 && i + 4 < buffer.length) {
-            gamerId = buffer[i];
+        while ((char)buffer[i] != '0') {
+            gamerId = Byte.toUnsignedInt(buffer[i]);
             i++;
+            gamerPoints = Byte.toUnsignedInt(buffer[i]);
+            i++;
+            x = getDoubleFromBuffer(buffer, i);
+            i += 2;
+            y = getDoubleFromBuffer(buffer, i);
+            i += 2;
+            gamers.add(new Gamer(gamerId, gamerPoints, x, y));
 
-            xTemp = Byte.toUnsignedInt(buffer[i]) * 256;
-            i++;
-            xTemp += Byte.toUnsignedInt(buffer[i]);
-            i++;
-            x = (double) xTemp / 100.0;
-
-            yTemp = Byte.toUnsignedInt(buffer[i]) * 256;
-            i++;
-            yTemp += Byte.toUnsignedInt(buffer[i]);
-            i++;
-            y = (double) yTemp / 100.0;
-
-            gamer = new Gamer(gamerId, x, y);
-            gamers.add(gamer);
+//            if (i >= buffer.length)
+//                break;
         }
 
-        GameLayout gameLayout = new GameLayout(packetId, gamers);
-        return gameLayout;
+        ArrayList<Bullet> bullets = new ArrayList<>();
+        i++;
+        while (i + 4 < buffer.length) {
+            x = getDoubleFromBuffer(buffer, i);
+            i += 2;
+            y = getDoubleFromBuffer(buffer, i);
+            i += 2;
+            bullets.add(new Bullet(x, y));
+        }
+
+        return new GameLayout(packetId, gamers, bullets);
+    }
+
+    public static double getDoubleFromBuffer(byte[] buffer, int index) {
+        int i = index;
+        int number = Byte.toUnsignedInt(buffer[i]) * 256;
+        number += Byte.toUnsignedInt(buffer[++i]);
+        return (double) number / 100.0;
     }
 
     public String toString() {
         StringBuilder str = new StringBuilder();
+        str.append("Pakiet: ");
         str.append(this.packetId);
-        str.append(": ");
+        str.append(" -> Gracze: ");
         for (int i = 0; i < this.gamers.size(); i++) {
-            str.append(this.gamers.get(i).getGamerId());
+            str.append("(");
+            str.append(this.gamers.get(i).getId());
+            str.append(",");
+            str.append(this.gamers.get(i).getPoints());
             str.append(",");
             str.append(this.gamers.get(i).getX());
             str.append(",");
             str.append(this.gamers.get(i).getY());
-            str.append("; ");
+            str.append("), ");
+        }
+        str.append(" Kule: ");
+        for (int i = 0; i < this.bullets.size(); i++) {
+            str.append("(");
+            str.append(this.bullets.get(i).getX());
+            str.append(",");
+            str.append(this.bullets.get(i).getY());
+            str.append("), ");
         }
         return str.toString();
     }
@@ -82,8 +120,8 @@ public class GameLayout {
         return gamers;
     }
 
-    public void setGamers(ArrayList<Gamer> gamers) {
-        this.gamers = gamers;
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
     }
 }
 

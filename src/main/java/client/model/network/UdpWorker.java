@@ -9,7 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.List;
 
-import static client.model.network.packets.gameLayout.GameLayout.checkIfGameLayout;
+import static client.model.network.packets.gameLayout.GameLayout.ifGameLayout;
 import static client.model.network.packets.gameLayout.GameLayout.parseToGameLayout;
 
 
@@ -33,11 +33,11 @@ public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoC
             if (this.isCancelled()) return false;
             this.udpSocket.receive(udpPacket);
             try {
-                if (!checkIfGameLayout(buffer) )
+                if (!ifGameLayout(buffer) )
                     continue;
 
                 GameLayout gameLayout = parseToGameLayout(buffer);
-                System.out.println("stan gry -> " + gameLayout.toString());
+                System.out.println("STAN GRY -> " + gameLayout.toString());
                 publish(gameLayout);
 
             } catch (ParseGameLayoutException ex) {

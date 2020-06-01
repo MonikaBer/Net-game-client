@@ -5,8 +5,10 @@ import client.interfaces.GameWindowListener;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class GameWindow extends JFrame implements KeyListener {
+public class GameWindow extends JFrame implements KeyListener, MouseListener {
 
     private GamePanel gamePanel;
     private GameWindowListener gameWindowListener;
@@ -21,6 +23,7 @@ public class GameWindow extends JFrame implements KeyListener {
         this.setContentPane(this.gamePanel);
 
         this.addKeyListener(this);
+        this.addMouseListener(this);
         this.pack();
     }
 
@@ -43,7 +46,7 @@ public class GameWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
-        gameWindowListener.gameWindowChanged(keyEvent);
+        gameWindowListener.gameWindowChanged(keyEvent, keyEvent.getKeyChar(), 0, 0);
     }
 
     @Override
@@ -51,4 +54,29 @@ public class GameWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {}
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        gameWindowListener.gameWindowChanged(mouseEvent, 'a', mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
+    }
 }

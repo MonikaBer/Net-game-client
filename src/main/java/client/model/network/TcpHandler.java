@@ -60,7 +60,7 @@ public class TcpHandler {
                             break;
                         }
                     }
-                    gamerId = getFromBuffer(packetWithGamerId, 1, 1);
+                    gamerId = getNumberFromBuffer(packetWithGamerId, 1, 1);
                     System.out.println("Odebrano id gracza równe: " + gamerId);
                 } catch (IOException e) {
                     //e.printStackTrace();
