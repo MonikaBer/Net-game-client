@@ -57,7 +57,7 @@ public class GameWindow extends JFrame implements KeyListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        gameWindowListener.gameWindowChanged(mouseEvent, 'a', mouseEvent.getX(), mouseEvent.getY());
+        gameWindowListener.gameWindowChanged(mouseEvent, 'm', mouseEvent.getX(), mouseEvent.getY());
     }
 
     @Override

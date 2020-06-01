@@ -50,7 +50,7 @@ public class GameLayout {
         int gamerPoints;
         double x, y;
         int i = 3;
-        while ((char)buffer[i] != '0') {
+        while (Byte.toUnsignedInt(buffer[i]) != 0) {
             gamerId = Byte.toUnsignedInt(buffer[i]);
             i++;
             gamerPoints = Byte.toUnsignedInt(buffer[i]);
