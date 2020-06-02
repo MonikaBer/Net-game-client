@@ -36,7 +36,7 @@ public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoC
                 if (!ifGameLayout(buffer) )
                     continue;
 
-                GameLayout gameLayout = parseToGameLayout(buffer);
+                GameLayout gameLayout = parseToGameLayout(buffer, udpPacket.getLength());
                 System.out.println("STAN GRY -> " + gameLayout.toString());
                 publish(gameLayout);
 

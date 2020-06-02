@@ -1,6 +1,8 @@
 package client.interfaces;
 
 
+import java.awt.event.KeyEvent;
+
 public interface GameWindowListener {
-    void gameWindowChanged(Object source, char key, int cursorX, int cursorY);
+    void gameWindowChanged(KeyEvent source);
 }

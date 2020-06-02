@@ -27,16 +27,16 @@ public class GameLayout {
         return true;
     }
 
-    public static GameLayout parseToGameLayout(byte[] buffer) throws ParseGameLayoutException {
-//        if (buffer.length < 7)
+    public static GameLayout parseToGameLayout(byte[] buffer, int packetLength) throws ParseGameLayoutException {
+//        if (packetLength < 7)
 //            throw new ParseGameLayoutException();
 
-        if (buffer.length < 3)
+        if (packetLength < 3)
             throw new ParseGameLayoutException();
 
-//        int crcSum = Helper.getNumberFromBuffer(buffer, buffer.length-4, buffer.length-1);
+//        int crcSum = Helper.getNumberFromBuffer(buffer, packetLength-4, packetLength-1);
 //        Checksum checksum = new CRC32();
-//        checksum.update(buffer, 0, buffer.length);
+//        checksum.update(buffer, 0, packetLength);
 //        int checksumValue = (int)checksum.getValue();
 //        if (checksumValue != crcSum) {
 //            throw new ParseGameLayoutException();
@@ -60,14 +60,13 @@ public class GameLayout {
             y = getDoubleFromBuffer(buffer, i);
             i += 2;
             gamers.add(new Gamer(gamerId, gamerPoints, x, y));
-
-//            if (i >= buffer.length)
+//            if (i >= packetLength)
 //                break;
         }
 
         ArrayList<Bullet> bullets = new ArrayList<>();
         i++;
-        while (i + 4 < buffer.length) {
+        while (i + 4 < packetLength) {
             x = getDoubleFromBuffer(buffer, i);
             i += 2;
             y = getDoubleFromBuffer(buffer, i);

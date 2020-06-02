@@ -121,7 +121,7 @@ public class TcpHandler {
                             while (true) {
                                 len = tcpSocket.getInputStream().read(startPacket);
                                 //receivedPacket = convertToString(startPacket);
-                                if (len != 5 || !ifStartPacket(startPacket)) {
+                                if (!ifStartPacket(startPacket)) {
                                     System.out.println("Serwer wysłał niespodziewany pakiet, miał być <S...>");
                                 } else {
                                     System.out.println("Udane zainicjowanie UDP, otrzymany pakiet START po TCP od serwera");
