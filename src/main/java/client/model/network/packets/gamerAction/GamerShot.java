@@ -1,23 +1,22 @@
 package client.model.network.packets.gamerAction;
 
-public class GamerShot extends GamerAction {
+import client.model.helpers.Helper;
+
+public class GamerShot {
 
     private int shotAngle;
 
-    public GamerShot(int shotAngle, int previousGameLayoutNr) {
-        super(previousGameLayoutNr);
+    public GamerShot(int shotAngle) {
         this.shotAngle = shotAngle;
     }
 
     public byte[] toBytes() {
-        byte[] bytes = new byte[4];
+        byte[] bytes = new byte[2];
 
         bytes[0] = (byte) ('Z');
         bytes[1] = (byte) this.shotAngle;
 
-        bytes[2] = (byte) (this.previousGameLayoutNr >> 8);
-        bytes[3] = (byte) (this.previousGameLayoutNr & 0x0f);
-
-        return bytes;
+        byte[] newBytes = Helper.getNewBufferWithCrc(bytes);
+        return newBytes;
     }
 }

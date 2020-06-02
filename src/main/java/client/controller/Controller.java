@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Controller implements ConfigurationWindowListener, GameWindowListener {
@@ -52,7 +54,9 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
             this.gameWindow.getGamePanel().setGamerPosition(gamerId, x, y);
         }
         this.gameWindow.getGamePanel().setBullets(gameLayout.getBullets());
-        this.gameWindow.setContentPane(this.gameWindow.getGamePanel());
+        this.gameWindow.getGamePanel().removeAll();
+        this.gameWindow.getGamePanel().revalidate();
+        this.gameWindow.getGamePanel().repaint();
     }
 
     @Override
@@ -81,15 +85,16 @@ public class Controller implements ConfigurationWindowListener, GameWindowListen
                 case KeyEvent.VK_DOWN:  shotAngle = (int)Math.round(90*254/359.0); break;   //down arrow
                 case KeyEvent.VK_LEFT:  shotAngle = (int)Math.round(180*254/359.0); break;  //left arrow
                 case KeyEvent.VK_UP:    shotAngle = (int)Math.round(270*254/359.0); break;  //up arrow
-                case KeyEvent.VK_RIGHT: shotAngle = (int)Math.round(0*254/359.0); break;    //right arrow
+                case KeyEvent.VK_RIGHT: shotAngle = (int)Math.round(0/359.0); break;    //right arrow
                 default: return;
             }
             if (shotAngle != -1) {  //shot
-                GamerShot gamerShot = new GamerShot(shotAngle, this.previousGameLayoutNr);
+                GamerShot gamerShot = new GamerShot(shotAngle);
                 byte[] udpShotPacket = gamerShot.toBytes();
+                //System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
                 datagramPacket = new DatagramPacket(udpShotPacket, udpShotPacket.length, this.udpHost);
             } else if (movingDirection != -1) {    //motion
-                GamerMoving gamerMoving = new GamerMoving(movingDirection, this.previousGameLayoutNr);
+                GamerMoving gamerMoving = new GamerMoving(movingDirection);
                 byte[] udpMovingPacket = gamerMoving.toBytes();
                 datagramPacket = new DatagramPacket(udpMovingPacket, udpMovingPacket.length, this.udpHost);
             }

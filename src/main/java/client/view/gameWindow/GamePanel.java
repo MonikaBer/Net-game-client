@@ -36,7 +36,7 @@ public class GamePanel extends JPanel {
         int i = getGamerIndex(gamerId);
         if (i == -1) {
             this.gamers.add(new Gamer2D(gamerId));
-            i = this.gamers.size();
+            i = this.gamers.size() - 1;
         }
         this.gamers.get(i).setPosition(x, y);
     }
@@ -48,23 +48,10 @@ public class GamePanel extends JPanel {
         }
     }
 
-//    public void changeGameGraphics() {
-//        int colorNr = 0;
-//        for (int i = 0; i < this.gamers.size(); i++) {
-//            this.gameGraphics.setColor(this.colors.get(colorNr));
-//            this.gameGraphics.draw(this.gamers.get(i).getGraphicRepresentation());
-//            this.gameGraphics.fill(this.gamers.get(i).getGraphicRepresentation());
-//            colorNr++;
-//            if (colorNr > 7) colorNr = 0;
-//        }
-//    }
-
-//    public Graphics2D getGameGraphics() {
-//        return gameGraphics;
-//    }
-
     @Override
     public void paintComponent(Graphics g) {
+        if (!this.bullets.isEmpty()) {
+        }
         this.gameGraphics = (Graphics2D) g;
         super.paintComponent(gameGraphics);
 

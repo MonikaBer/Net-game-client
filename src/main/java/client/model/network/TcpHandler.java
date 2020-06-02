@@ -107,14 +107,15 @@ public class TcpHandler {
                 controller.setUdpHost(gameConfiguration.getUdpHost());
 
                 //create UDP started packet
-                DatagramPacket startUdpPacket = new DatagramPacket(packetWithGamerId, packetWithGamerId.length,
-                  gameConfiguration.getUdpHost());
+                byte[] packetWithGamerIdAndCrc = getNewBufferWithCrc(packetWithGamerId);
+                DatagramPacket startUdpPacket = new DatagramPacket(packetWithGamerIdAndCrc,
+                        packetWithGamerIdAndCrc.length, gameConfiguration.getUdpHost());
 
                 try {
                     tcpSocket.setSoTimeout(1000);
                     System.out.println("Przesyłam pakiet startowy po UDP do serwera");
                     byte[] startPacket = new byte[5];
-                    sendingstartedUdpPacketAndWaitingForStartLoop:
+                    sendingStartedUdpPacketAndWaitingForStartLoop:
                     while (true) {
                         udpClientSocket.send(startUdpPacket);
                         try {
@@ -125,7 +126,7 @@ public class TcpHandler {
                                     System.out.println("Serwer wysłał niespodziewany pakiet, miał być <S...>");
                                 } else {
                                     System.out.println("Udane zainicjowanie UDP, otrzymany pakiet START po TCP od serwera");
-                                    break sendingstartedUdpPacketAndWaitingForStartLoop;
+                                    break sendingStartedUdpPacketAndWaitingForStartLoop;
                                 }
                             }
                         } catch (SocketTimeoutException e) {

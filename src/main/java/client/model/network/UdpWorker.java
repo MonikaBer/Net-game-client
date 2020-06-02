@@ -33,13 +33,12 @@ public class UdpWorker extends SwingWorker<Boolean, GameLayout> implements AutoC
             if (this.isCancelled()) return false;
             this.udpSocket.receive(udpPacket);
             try {
-                if (!ifGameLayout(buffer) )
+                if (!ifGameLayout(buffer) ) {
                     continue;
-
+                }
                 GameLayout gameLayout = parseToGameLayout(buffer, udpPacket.getLength());
                 System.out.println("STAN GRY -> " + gameLayout.toString());
                 publish(gameLayout);
-
             } catch (ParseGameLayoutException ex) {
                 ex.printStackTrace();
                 System.out.println("Nieudane parsowanie pakietu ze stanem gry");

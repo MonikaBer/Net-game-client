@@ -28,19 +28,16 @@ public class GameLayout {
     }
 
     public static GameLayout parseToGameLayout(byte[] buffer, int packetLength) throws ParseGameLayoutException {
-//        if (packetLength < 7)
-//            throw new ParseGameLayoutException();
-
-        if (packetLength < 3)
+        if (packetLength < 7)
             throw new ParseGameLayoutException();
 
-//        int crcSum = Helper.getNumberFromBuffer(buffer, packetLength-4, packetLength-1);
-//        Checksum checksum = new CRC32();
-//        checksum.update(buffer, 0, packetLength);
-//        int checksumValue = (int)checksum.getValue();
-//        if (checksumValue != crcSum) {
-//            throw new ParseGameLayoutException();
-//        }
+        int crcSum = Helper.getNumberFromBuffer(buffer, packetLength-4, packetLength-1);
+        Checksum checksum = new CRC32();
+        checksum.update(buffer, 0, packetLength-4);
+        int checksumValue = (int)checksum.getValue();
+        if (checksumValue != crcSum) {
+            throw new ParseGameLayoutException();
+        }
 
         int packetId = Byte.toUnsignedInt(buffer[1]);
         packetId = packetId * 256 + Byte.toUnsignedInt(buffer[2]);
@@ -60,13 +57,11 @@ public class GameLayout {
             y = getDoubleFromBuffer(buffer, i);
             i += 2;
             gamers.add(new Gamer(gamerId, gamerPoints, x, y));
-//            if (i >= packetLength)
-//                break;
         }
 
         ArrayList<Bullet> bullets = new ArrayList<>();
         i++;
-        while (i + 4 < packetLength) {
+        while (i + 7 < packetLength) {
             x = getDoubleFromBuffer(buffer, i);
             i += 2;
             y = getDoubleFromBuffer(buffer, i);
