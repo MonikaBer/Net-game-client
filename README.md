@@ -6,7 +6,7 @@ Client of simple shooter game based on communication with sockets.
 Java 11, Swing, Maven
 
 ## Requirements
-The client program requires a running [server](https://github.com/MonikaBer/Net_game_server), but the server isn't finished yet.
+
 
 ## Usage
 After cloning the repository and entering it, run the following commands:
